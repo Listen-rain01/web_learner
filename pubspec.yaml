@@ -1,0 +1,38 @@
+name: web_learner
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.10.8
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # 状态管理
+  flutter_riverpod: 3.0.3
+  riverpod_annotation: 3.0.3
+
+  # 路由
+  go_router: ^17.1.0
+
+  # 网络请求
+  dio: ^5.9.1
+
+  # JSON 序列化
+  json_annotation: ^4.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+  # 代码生成
+  build_runner: ^2.11.0
+  riverpod_generator: 3.0.3
+  go_router_builder: ^4.2.0
+  json_serializable: ^6.9.4
+
+flutter:
+  uses-material-design: true
