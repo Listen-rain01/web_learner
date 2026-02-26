@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import '../../../../../../core/utils/esdt_encryption.dart';
+import 'package:web_learner/core/utils/esdt_encryption.dart';
 
 /// 登录请求模型
 class LoginRequest {

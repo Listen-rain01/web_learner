@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/constants/api_constants.dart';
 import '../../../../core/network/dio_client.dart';
 import '../models/login_request.dart';
 import '../models/login_response.dart';
@@ -17,7 +18,7 @@ class AuthRemoteDataSource {
   Future<LoginResponse> login(LoginRequest request) async {
     try {
       final response = await _dio.post(
-        '/PersonWap/GetPersonInfo',
+        ApiConstants.login,
         data: request.toFormData(),
         options: Options(
           contentType: Headers.formUrlEncodedContentType,

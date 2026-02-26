@@ -8,8 +8,7 @@ class LoggingInterceptor extends Interceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     debugPrint('┌─────────────────────────────────────────────────────────────');
     debugPrint('│ 🚀 REQUEST [${options.method}] ${options.uri}');
-    debugPrint('│ Headers: ${options.headers}');
-    if (options.data != null) {
+    if (kDebugMode && options.data != null) {
       debugPrint('│ Body: ${options.data}');
     }
     if (options.queryParameters.isNotEmpty) {

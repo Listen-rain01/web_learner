@@ -18,10 +18,4 @@ class ApiConstants {
 
   /// 登录接口
   static const String login = '/PersonWap/GetPersonInfo';
-
-  /// 登出接口
-  static const String logout = '/api/auth/logout';
-
-  /// 刷新 Token 接口
-  static const String refreshToken = '/api/auth/refresh';
 }
