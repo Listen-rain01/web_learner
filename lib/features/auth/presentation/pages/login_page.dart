@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../providers/login_provider.dart';
 
 /// 登录页面
@@ -78,7 +79,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
                       // 应用名称
                       Text(
-                        'Web Learner',
+                        AppConstants.appName,
                         style: textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: colorScheme.primary,
@@ -260,14 +261,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               child: Column(
                 children: [
                   Text(
-                    '开发者：山归有时雾',
+                    '开发者：${AppConstants.developer}',
                     style: textTheme.bodySmall?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '© 2025 Copyright Web Learner. All rights reserved.',
+                    AppConstants.copyright,
                     textAlign: TextAlign.center,
                     style: textTheme.labelSmall?.copyWith(
                       color: colorScheme.onSurfaceVariant,

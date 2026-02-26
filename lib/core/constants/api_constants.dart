@@ -18,4 +18,7 @@ class ApiConstants {
 
   /// 登录接口
   static const String login = '/PersonWap/GetPersonInfo';
+
+  /// 获取个人基本信息接口
+  static const String myBaseInfo = '/PersonWap/MyBaseInfo';
 }

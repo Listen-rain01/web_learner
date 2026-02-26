@@ -19,12 +19,15 @@ dependencies:
 
   # 网络请求
   dio: ^5.9.1
+  dio_cookie_manager: ^3.1.1
+  cookie_jar: ^4.0.8
 
   # JSON 序列化
   json_annotation: ^4.9.0
 
   # 本地存储
   shared_preferences: ^2.3.0
+  package_info_plus: ^8.0.0
 
 dev_dependencies:
   flutter_test:

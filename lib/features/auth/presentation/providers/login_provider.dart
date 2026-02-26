@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/providers/user_session_provider.dart';
 import '../../../../core/storage/saved_accounts_storage.dart';
 import '../../../../core/utils/validators.dart';
 import '../../data/repositories/auth_repository_impl.dart';
@@ -117,6 +118,8 @@ class LoginNotifier extends _$LoginNotifier {
       final user = await useCase(idCard: state.idCard, password: state.password);
 
       debugPrint('登录成功: ${user.userName}');
+
+      ref.read(userSessionProvider.notifier).setUser(user);
 
       if (state.rememberAccount) {
         await SavedAccountsStorage.saveAccount(state.idCard);

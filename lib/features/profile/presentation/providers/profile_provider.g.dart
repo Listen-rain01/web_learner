@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'login_provider.dart';
+part of 'profile_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,58 +8,53 @@ part of 'login_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// 登录状态管理
 
-@ProviderFor(LoginNotifier)
-const loginProvider = LoginNotifierProvider._();
+@ProviderFor(ProfileNotifier)
+const profileProvider = ProfileNotifierProvider._();
 
-/// 登录状态管理
-final class LoginNotifierProvider
-    extends $NotifierProvider<LoginNotifier, LoginState> {
-  /// 登录状态管理
-  const LoginNotifierProvider._()
+final class ProfileNotifierProvider
+    extends $NotifierProvider<ProfileNotifier, ProfileState> {
+  const ProfileNotifierProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'loginProvider',
+        name: r'profileProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$loginNotifierHash();
+  String debugGetCreateSourceHash() => _$profileNotifierHash();
 
   @$internal
   @override
-  LoginNotifier create() => LoginNotifier();
+  ProfileNotifier create() => ProfileNotifier();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(LoginState value) {
+  Override overrideWithValue(ProfileState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<LoginState>(value),
+      providerOverride: $SyncValueProvider<ProfileState>(value),
     );
   }
 }
 
-String _$loginNotifierHash() => r'33a8c02b5bb3ea9b966fb7830f8bb6b5ad9fbec8';
+String _$profileNotifierHash() => r'c5efe69f3de5884c403015099ff2b79f6074c496';
 
-/// 登录状态管理
-
-abstract class _$LoginNotifier extends $Notifier<LoginState> {
-  LoginState build();
+abstract class _$ProfileNotifier extends $Notifier<ProfileState> {
+  ProfileState build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<LoginState, LoginState>;
+    final ref = this.ref as $Ref<ProfileState, ProfileState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<LoginState, LoginState>,
-              LoginState,
+              AnyNotifier<ProfileState, ProfileState>,
+              ProfileState,
               Object?,
               Object?
             >;
