@@ -140,7 +140,11 @@ class ProfilePage extends ConsumerWidget {
                   ListTile(
                     leading: const Icon(Icons.feedback_outlined),
                     title: const Text('反馈与帮助'),
-                    onTap: () {},
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('该功能暂未开放')),
+                      );
+                    },
                   ),
                   ListTile(
                     leading: const Icon(Icons.info_outline),
