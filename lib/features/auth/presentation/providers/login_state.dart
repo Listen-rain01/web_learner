@@ -9,6 +9,8 @@ class LoginState {
     this.idCardError,
     this.passwordError,
     this.errorMessage,
+    this.savedAccounts = const [],
+    this.showAccountSuggestions = false,
   });
 
   /// 身份证号
@@ -35,6 +37,12 @@ class LoginState {
   /// 通用错误信息
   final String? errorMessage;
 
+  /// 已保存的账号列表
+  final List<String> savedAccounts;
+
+  /// 是否显示账号下拉建议
+  final bool showAccountSuggestions;
+
   /// 复制并修改状态
   LoginState copyWith({
     String? idCard,
@@ -48,6 +56,8 @@ class LoginState {
     bool clearPasswordError = false,
     String? errorMessage,
     bool clearErrorMessage = false,
+    List<String>? savedAccounts,
+    bool? showAccountSuggestions,
   }) {
     return LoginState(
       idCard: idCard ?? this.idCard,
@@ -58,6 +68,8 @@ class LoginState {
       idCardError: clearIdCardError ? null : (idCardError ?? this.idCardError),
       passwordError: clearPasswordError ? null : (passwordError ?? this.passwordError),
       errorMessage: clearErrorMessage ? null : (errorMessage ?? this.errorMessage),
+      savedAccounts: savedAccounts ?? this.savedAccounts,
+      showAccountSuggestions: showAccountSuggestions ?? this.showAccountSuggestions,
     );
   }
 
@@ -69,9 +81,8 @@ class LoginState {
       rememberAccount: rememberAccount,
       showPassword: showPassword,
       isLoading: isLoading,
-      idCardError: null,
-      passwordError: null,
-      errorMessage: null,
+      savedAccounts: savedAccounts,
+      showAccountSuggestions: showAccountSuggestions,
     );
   }
 }

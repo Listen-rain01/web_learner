@@ -23,6 +23,9 @@ dependencies:
   # JSON 序列化
   json_annotation: ^4.9.0
 
+  # 本地存储
+  shared_preferences: ^2.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

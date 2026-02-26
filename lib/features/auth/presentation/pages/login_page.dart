@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../providers/login_provider.dart';
 
 /// 登录页面
-/// 包含：Logo、应用名称、身份证输入、密码输入、记住账号、登录按钮、版权信息
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
@@ -16,11 +15,28 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   final _idCardController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _idCardFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _idCardFocusNode.addListener(() {
+      final notifier = ref.read(loginProvider.notifier);
+      if (_idCardFocusNode.hasFocus) {
+        notifier.showSuggestions();
+      } else {
+        Future.delayed(const Duration(milliseconds: 150), () {
+          if (mounted) notifier.hideSuggestions();
+        });
+      }
+    });
+  }
 
   @override
   void dispose() {
     _idCardController.dispose();
     _passwordController.dispose();
+    _idCardFocusNode.dispose();
     super.dispose();
   }
 
@@ -30,6 +46,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final textTheme = Theme.of(context).textTheme;
     final notifier = ref.read(loginProvider.notifier);
     final state = ref.watch(loginProvider);
+
+    // 同步 controller 与 state（选择账号时更新输入框）
+    if (_idCardController.text != state.idCard) {
+      _idCardController.text = state.idCard;
+      _idCardController.selection = TextSelection.collapsed(
+        offset: state.idCard.length,
+      );
+    }
+    if (_passwordController.text != state.password) {
+      _passwordController.text = state.password;
+      _passwordController.selection = TextSelection.collapsed(
+        offset: state.password.length,
+      );
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -58,26 +88,65 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
                       const SizedBox(height: 48),
 
-                      // 身份证输入框
-                      TextFormField(
-                        controller: _idCardController,
-                        enabled: !state.isLoading,
-                        decoration: InputDecoration(
-                          labelText: '身份证号',
-                          hintText: '请输入您的身份证号码',
-                          prefixIcon: const Icon(Icons.badge_outlined),
-                          errorText: state.idCardError,
-                          suffixIcon: _idCardController.text.isNotEmpty
-                              ? IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    _idCardController.clear();
-                                    notifier.updateIdCard('');
-                                  },
-                                )
-                              : null,
-                        ),
-                        onChanged: notifier.updateIdCard,
+                      // 身份证输入框 + 下拉账号列表
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextFormField(
+                            controller: _idCardController,
+                            focusNode: _idCardFocusNode,
+                            enabled: !state.isLoading,
+                            decoration: InputDecoration(
+                              labelText: '身份证号',
+                              hintText: '请输入您的身份证号码',
+                              prefixIcon: const Icon(Icons.badge_outlined),
+                              errorText: state.idCardError,
+                              suffixIcon: _idCardController.text.isNotEmpty
+                                  ? IconButton(
+                                      icon: const Icon(Icons.clear),
+                                      onPressed: () {
+                                        _idCardController.clear();
+                                        _passwordController.clear();
+                                        notifier.updateIdCard('');
+                                        notifier.updatePassword('');
+                                      },
+                                    )
+                                  : null,
+                            ),
+                            onChanged: notifier.updateIdCard,
+                          ),
+                          // 下拉账号建议列表
+                          if (state.showAccountSuggestions && state.savedAccounts.isNotEmpty)
+                            Material(
+                              elevation: 4,
+                              borderRadius: const BorderRadius.vertical(
+                                bottom: Radius.circular(8),
+                              ),
+                              child: ListView.separated(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: state.savedAccounts.length,
+                                separatorBuilder: (_, _) => const Divider(height: 1),
+                                itemBuilder: (context, index) {
+                                  final idCard = state.savedAccounts[index];
+                                  return ListTile(
+                                    dense: true,
+                                    leading: const Icon(Icons.person_outline, size: 20),
+                                    title: Text(
+                                      idCard,
+                                      style: textTheme.bodyMedium,
+                                    ),
+                                    trailing: IconButton(
+                                      icon: const Icon(Icons.close, size: 18),
+                                      onPressed: () => notifier.removeAccount(idCard),
+                                    ),
+                                    onTap: () => notifier.selectAccount(idCard),
+                                  );
+                                },
+                              ),
+                            ),
+                        ],
                       ),
 
                       const SizedBox(height: 16),
@@ -121,9 +190,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           ),
                           const SizedBox(width: 8),
                           GestureDetector(
-                            onTap: state.isLoading
-                                ? null
-                                : notifier.toggleRememberAccount,
+                            onTap: state.isLoading ? null : notifier.toggleRememberAccount,
                             child: Text(
                               '记住账号',
                               style: textTheme.bodyMedium?.copyWith(
@@ -150,9 +217,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ? const SizedBox(
                                 height: 20,
                                 width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
+                                child: CircularProgressIndicator(strokeWidth: 2),
                               )
                             : const Text(
                                 '登 录',
@@ -171,17 +236,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           ),
                           child: Row(
                             children: [
-                              Icon(
-                                Icons.error_outline,
-                                color: colorScheme.error,
-                              ),
+                              Icon(Icons.error_outline, color: colorScheme.error),
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   state.errorMessage!,
-                                  style: TextStyle(
-                                    color: colorScheme.onErrorContainer,
-                                  ),
+                                  style: TextStyle(color: colorScheme.onErrorContainer),
                                 ),
                               ),
                             ],
