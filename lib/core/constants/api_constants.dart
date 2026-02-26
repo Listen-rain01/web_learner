@@ -21,4 +21,24 @@ class ApiConstants {
 
   /// 获取个人基本信息接口
   static const String myBaseInfo = '/PersonWap/MyBaseInfo';
+
+  // ==================== 题库选择 ====================
+
+  /// 获取可用单位列表（前置步骤）
+  static const String selectExamType = '/PersonWap/SelectExamType';
+
+  /// 获取考试类别列表
+  static const String getAllTypeEx = '/ExamManger/P_ExamTypeStyle/GetAllTypeEx';
+
+  /// 获取子类别（年份）列表
+  static const String getAllChildTypeEx = '/ExamManger/P_ExamTypeStyle/GetAllChildTypeEx';
+
+  /// 获取题库列表
+  static const String getExamTypeListExOne = '/ExamManger/P_ExamType/GetExamTypeListExOne';
+
+  /// 设置题库
+  static const String saveExamTypeIdsOne = '/ArchiveManger/D_PersonManager/SaveExamTypeIdsOne';
+
+  /// 获取当前题库
+  static const String getCurExamTypeOne = '/ArchiveManger/D_Person/GetCurExamTypeOne';
 }

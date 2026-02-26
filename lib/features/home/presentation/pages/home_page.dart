@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../exam/presentation/pages/exam_page.dart';
 import '../../../profile/presentation/pages/profile_page.dart';
 
 /// 主页 Shell — 底部导航 + IndexedStack
@@ -17,7 +18,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   static final _pages = <Widget>[
     const _PlaceholderPage(label: '功能一'),
     const _PlaceholderPage(label: '功能二'),
-    const _PlaceholderPage(label: '功能三'),
+    const ExamPage(),
     const ProfilePage(),
   ];
 
@@ -44,9 +45,9 @@ class _HomePageState extends ConsumerState<HomePage> {
             label: '功能二',
           ),
           NavigationDestination(
-            icon: Icon(Icons.grid_view_outlined),
-            selectedIcon: Icon(Icons.grid_view),
-            label: '功能三',
+            icon: Icon(Icons.menu_book_outlined),
+            selectedIcon: Icon(Icons.menu_book),
+            label: '题库',
           ),
           NavigationDestination(
             icon: Icon(Icons.person_outline),
