@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../providers/login_provider.dart';
 
 /// 登录页面
 /// 包含：Logo、应用名称、身份证输入、密码输入、记住账号、登录按钮、版权信息
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  bool _isRemember = false;
-  bool _obscurePassword = true;
+class _LoginPageState extends ConsumerState<LoginPage> {
   final _idCardController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   void dispose() {
     _idCardController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -24,6 +28,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final notifier = ref.read(loginProvider.notifier);
+    final state = ref.watch(loginProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -55,45 +61,47 @@ class _LoginPageState extends State<LoginPage> {
                       // 身份证输入框
                       TextFormField(
                         controller: _idCardController,
+                        enabled: !state.isLoading,
                         decoration: InputDecoration(
                           labelText: '身份证号',
                           hintText: '请输入您的身份证号码',
                           prefixIcon: const Icon(Icons.badge_outlined),
+                          errorText: state.idCardError,
                           suffixIcon: _idCardController.text.isNotEmpty
                               ? IconButton(
                                   icon: const Icon(Icons.clear),
                                   onPressed: () {
                                     _idCardController.clear();
-                                    setState(() {});
+                                    notifier.updateIdCard('');
                                   },
                                 )
                               : null,
                         ),
-                        onChanged: (_) => setState(() {}),
+                        onChanged: notifier.updateIdCard,
                       ),
 
                       const SizedBox(height: 16),
 
                       // 密码输入框
                       TextFormField(
-                        obscureText: _obscurePassword,
+                        controller: _passwordController,
+                        enabled: !state.isLoading,
+                        obscureText: !state.showPassword,
                         decoration: InputDecoration(
                           labelText: '密码',
                           hintText: '请输入密码',
                           prefixIcon: const Icon(Icons.lock_outline),
+                          errorText: state.passwordError,
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility_outlined,
+                              state.showPassword
+                                  ? Icons.visibility_outlined
+                                  : Icons.visibility_off_outlined,
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
+                            onPressed: notifier.togglePasswordVisibility,
                           ),
                         ),
+                        onChanged: notifier.updatePassword,
                       ),
 
                       const SizedBox(height: 12),
@@ -105,15 +113,17 @@ class _LoginPageState extends State<LoginPage> {
                             height: 24,
                             width: 24,
                             child: Checkbox(
-                              value: _isRemember,
-                              onChanged: (value) {
-                                setState(() => _isRemember = value ?? false);
-                              },
+                              value: state.rememberAccount,
+                              onChanged: state.isLoading
+                                  ? null
+                                  : (_) => notifier.toggleRememberAccount(),
                             ),
                           ),
                           const SizedBox(width: 8),
                           GestureDetector(
-                            onTap: () => setState(() => _isRemember = !_isRemember),
+                            onTap: state.isLoading
+                                ? null
+                                : notifier.toggleRememberAccount,
                             child: Text(
                               '记住账号',
                               style: textTheme.bodyMedium?.copyWith(
@@ -128,14 +138,56 @@ class _LoginPageState extends State<LoginPage> {
 
                       // 登录按钮
                       ElevatedButton(
-                        onPressed: () {
-                          // TODO: 此处添加登录逻辑
-                        },
-                        child: const Text(
-                          '登 录',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
+                        onPressed: state.isLoading
+                            ? null
+                            : () async {
+                                final success = await notifier.login();
+                                if (success && context.mounted) {
+                                  context.go('/home');
+                                }
+                              },
+                        child: state.isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Text(
+                                '登 录',
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
                       ),
+
+                      // 错误信息提示
+                      if (state.errorMessage != null) ...[
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: colorScheme.errorContainer,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.error_outline,
+                                color: colorScheme.error,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  state.errorMessage!,
+                                  style: TextStyle(
+                                    color: colorScheme.onErrorContainer,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
