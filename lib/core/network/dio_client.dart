@@ -4,17 +4,18 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../constants/api_constants.dart';
-import 'interceptors/auth_interceptor.dart';
 import 'interceptors/logging_interceptor.dart';
 
 part 'dio_client.g.dart';
 
-/// 全局 CookieJar，保持登录 Session Cookie
-final cookieJar = CookieJar();
+/// CookieJar Provider，保持登录 Session Cookie
+@riverpod
+CookieJar cookieJar(Ref ref) => CookieJar();
 
 /// Dio 客户端 Provider
 @riverpod
 Dio dioClient(Ref ref) {
+  final jar = ref.watch(cookieJarProvider);
   final dio = Dio(
     BaseOptions(
       baseUrl: ApiConstants.baseUrl,
@@ -30,9 +31,8 @@ Dio dioClient(Ref ref) {
 
   // 添加拦截器（CookieManager 放最前，确保每次请求都带上 Session Cookie）
   dio.interceptors.addAll([
-    CookieManager(cookieJar),
+    CookieManager(jar),
     LoggingInterceptor(),
-    AuthInterceptor(),
   ]);
 
   return dio;

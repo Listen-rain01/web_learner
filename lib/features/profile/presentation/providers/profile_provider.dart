@@ -6,7 +6,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/providers/user_session_provider.dart';
 import '../../data/repositories/profile_repository_impl.dart';
-import '../../domain/usecases/get_profile_usecase.dart';
 import 'profile_state.dart';
 
 part 'profile_provider.g.dart';
@@ -24,8 +23,8 @@ class ProfileNotifier extends _$ProfileNotifier {
     if (user == null) return;
 
     try {
-      final useCase = GetProfileUseCase(ref.read(profileRepositoryProvider));
-      final profile = await useCase(userId: user.userId);
+      final repo = ref.read(profileRepositoryProvider);
+      final profile = await repo.getProfile(userId: user.userId);
       state = state.copyWith(profile: profile, isLoading: false, clearError: true);
 
       // 下载头像（携带 Cookie，不影响主流程）
@@ -33,7 +32,7 @@ class ProfileNotifier extends _$ProfileNotifier {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: e.toString().replaceFirst('Exception: ', ''),
+        errorMessage: e.toString(),
       );
     }
   }

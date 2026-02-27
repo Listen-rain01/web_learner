@@ -44,7 +44,7 @@ final class LoginNotifierProvider
   }
 }
 
-String _$loginNotifierHash() => r'33a8c02b5bb3ea9b966fb7830f8bb6b5ad9fbec8';
+String _$loginNotifierHash() => r'c32c6b6693edf4e12c2f876e44665195cbca65d9';
 
 /// 登录状态管理
 

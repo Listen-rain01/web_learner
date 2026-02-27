@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/constants/api_constants.dart';
+import '../../../../core/error/app_exception.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/utils/esdt_encryption.dart';
 import '../models/exam_category_model.dart';
@@ -30,8 +31,10 @@ class ExamRemoteDataSource {
     );
     final html = response.data ?? '';
     // 从 HTML 中提取 vData JSON: var vData={...};
-    final match = RegExp(r'var vData\s*=\s*(\{.*?\});', dotAll: true)
-        .firstMatch(html);
+    final match = RegExp(
+      r'var vData\s*=\s*(\{.*?\});',
+      dotAll: true,
+    ).firstMatch(html);
     if (match == null) return [];
     final jsonStr = match.group(1)!;
     // 简单提取 Units 字段值
@@ -132,14 +135,15 @@ class ExamRemoteDataSource {
     final Map<String, dynamic> map = raw is String
         ? Map<String, dynamic>.from(jsonDecode(raw) as Map)
         : raw is Map
-            ? Map<String, dynamic>.from(raw)
-            : {};
+        ? Map<String, dynamic>.from(raw)
+        : {};
     final success = map['success'] as bool? ?? false;
     if (!success) {
       final msg = map['message'] as String? ?? '设置题库失败';
-      throw Exception(msg);
+      throw AppException(msg);
     }
   }
+
   /// 接口5：获取当前题库名称（返回 "examTypeId|examTypeName" 或 null）
   Future<String?> getCurrentLibraryName({required String pid}) async {
     final response = await _dio.post<dynamic>(
@@ -155,8 +159,8 @@ class ExamRemoteDataSource {
     final Map<String, dynamic> map = raw is String
         ? Map<String, dynamic>.from(jsonDecode(raw) as Map)
         : raw is Map
-            ? Map<String, dynamic>.from(raw)
-            : {};
+        ? Map<String, dynamic>.from(raw)
+        : {};
     final success = map['success'] as bool? ?? false;
     if (!success) return null;
     return map['data'] as String?;

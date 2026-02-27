@@ -5,7 +5,6 @@ import '../../../../core/providers/user_session_provider.dart';
 import '../../../../core/storage/saved_accounts_storage.dart';
 import '../../../../core/utils/validators.dart';
 import '../../data/repositories/auth_repository_impl.dart';
-import '../../domain/usecases/login_usecase.dart';
 import 'login_state.dart';
 
 part 'login_provider.g.dart';
@@ -114,8 +113,8 @@ class LoginNotifier extends _$LoginNotifier {
     state = state.copyWith(isLoading: true, clearErrorMessage: true);
 
     try {
-      final useCase = LoginUseCase(ref.read(authRepositoryProvider));
-      final user = await useCase(idCard: state.idCard, password: state.password);
+      final repo = ref.read(authRepositoryProvider);
+      final user = await repo.login(idCard: state.idCard, password: state.password);
 
       debugPrint('登录成功: ${user.userName}');
 
@@ -139,7 +138,7 @@ class LoginNotifier extends _$LoginNotifier {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: e.toString().replaceFirst('Exception: ', ''),
+        errorMessage: e.toString(),
       );
       return false;
     }

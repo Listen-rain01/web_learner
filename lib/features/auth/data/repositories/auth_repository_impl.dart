@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/error/app_exception.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/models/login_request.dart';
 import '../../domain/entities/user_entity.dart';
@@ -20,7 +21,7 @@ class AuthRepositoryImpl implements AuthRepository {
     );
 
     if (!response.isSuccess) {
-      throw Exception(response.errorMessage ?? '登录失败');
+      throw AppException(response.errorMessage ?? '登录失败');
     }
 
     return UserEntity(
