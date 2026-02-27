@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_constants.dart';
+import '../../../announcement/presentation/providers/announcement_provider.dart';
 import '../providers/login_provider.dart';
 
 /// 登录页面
@@ -47,6 +48,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final textTheme = Theme.of(context).textTheme;
     final notifier = ref.read(loginProvider.notifier);
     final state = ref.watch(loginProvider);
+    final announcementAsync = ref.watch(announcementProvider);
 
     // 同步 controller 与 state（选择账号时更新输入框）
     if (_idCardController.text != state.idCard) {
@@ -66,6 +68,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       body: SafeArea(
         child: Column(
           children: [
+            // 公告跑马灯横条（有公告时显示，不可关闭）
+            if (announcementAsync.value != null)
+              _MarqueeAnnouncement(
+                content: announcementAsync.value!.content,
+              ),
             Expanded(
               child: Center(
                 child: SingleChildScrollView(
@@ -279,6 +286,79 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// 跑马灯公告横条
+class _MarqueeAnnouncement extends StatefulWidget {
+  const _MarqueeAnnouncement({required this.content});
+
+  final String content;
+
+  @override
+  State<_MarqueeAnnouncement> createState() => _MarqueeAnnouncementState();
+}
+
+class _MarqueeAnnouncementState extends State<_MarqueeAnnouncement>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 12),
+    )..addListener(_scroll)..repeat();
+  }
+
+  void _scroll() {
+    if (!_scrollController.hasClients) return;
+    final max = _scrollController.position.maxScrollExtent;
+    _scrollController.jumpTo(max * _controller.value);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_scroll);
+    _controller.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Container(
+      width: double.infinity,
+      color: colorScheme.primaryContainer,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Row(
+        children: [
+          Icon(Icons.campaign_outlined,
+              size: 18, color: colorScheme.onPrimaryContainer),
+          const SizedBox(width: 8),
+          Expanded(
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              physics: const NeverScrollableScrollPhysics(),
+              child: Text(
+                '${widget.content}          ',
+                style: textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onPrimaryContainer,
+                ),
+                maxLines: 1,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

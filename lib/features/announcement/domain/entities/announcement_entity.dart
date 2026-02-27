@@ -1,0 +1,14 @@
+/// 公告实体
+class AnnouncementEntity {
+  const AnnouncementEntity({
+    required this.id,
+    required this.title,
+    required this.content,
+    required this.createdAt,
+  });
+
+  final String id;
+  final String title;
+  final String content;
+  final DateTime createdAt;
+}
