@@ -41,4 +41,18 @@ class ApiConstants {
 
   /// 获取当前题库
   static const String getCurExamTypeOne = '/ArchiveManger/D_Person/GetCurExamTypeOne';
+
+  // ==================== 阅读学习 ====================
+
+  /// 获取知识类型列表
+  static const String getAllTypeOne = '/LearnManger/L_KnowledgeType/GetAllTypeOne';
+
+  /// 获取知识子分类
+  static const String getAllChildTypeOne = '/LearnManger/L_KnowledgeType/GetAllChildTypeOne';
+
+  /// 获取学习资料列表
+  static const String getStudyOne = '/LearnManger/L_KnowledgeSubject/GetStudyOne';
+
+  /// 完成阅读（记录学习进度）
+  static const String studyKnowledgeOne = '/ArchiveManger/D_PersonAccumulate/StudyKnowledgeOne';
 }

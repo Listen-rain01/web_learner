@@ -7,6 +7,7 @@ import '../../domain/entities/exam_year_entity.dart';
 import '../../domain/entities/unit_entity.dart';
 import '../providers/exam_provider.dart';
 import '../providers/exam_state.dart';
+import '../../../../features/study/presentation/widgets/study_section.dart';
 
 /// 题库页面
 class ExamPage extends ConsumerWidget {
@@ -16,7 +17,6 @@ class ExamPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final examState = ref.watch(examProvider);
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       backgroundColor: colorScheme.surfaceContainerLowest,
@@ -33,22 +33,8 @@ class ExamPage extends ConsumerWidget {
 
           const SizedBox(height: 16),
 
-          // 占位区域
-          Container(
-            height: 200,
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: Text(
-                '更多功能待开发',
-                style: textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
-          ),
+          // 阅读学习区块
+          const StudySection(),
         ],
       ),
     );
