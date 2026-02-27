@@ -55,4 +55,14 @@ class ApiConstants {
 
   /// 完成阅读（记录学习进度）
   static const String studyKnowledgeOne = '/ArchiveManger/D_PersonAccumulate/StudyKnowledgeOne';
+
+  // ==================== 积分任务 ====================
+
+  /// 获取今日积分任务列表
+  static const String getPersonTodayAccumulateOne = '/AccumulateManger/S_Accumulate/GetPersonTodayAccumulateOne';
+
+  // ==================== 主页信息 ====================
+
+  /// 获取用户主页基本信息（姓名、今日积分、当前题库）
+  static const String firstIndexOne = '/PersonWap/FirstIndexOne';
 }

@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/providers/home_info_provider.dart';
 import '../../../../core/providers/user_session_provider.dart';
 import '../../data/repositories/exam_repository_impl.dart';
 import '../../domain/entities/exam_category_entity.dart';
@@ -139,6 +140,7 @@ class ExamNotifier extends _$ExamNotifier {
         currentLibraryName: '${library.examTypeId}|${library.examTypeName}',
         isLoading: false,
       );
+      ref.read(homeInfoProvider.notifier).refresh();
       return true;
     } catch (e) {
       state = state.copyWith(
