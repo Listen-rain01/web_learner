@@ -27,7 +27,7 @@ class SupabaseAuthDataSource {
         .maybeSingle();
 
     if (data != null && data['is_banned'] == true) {
-      throw AppException('账号已被禁止登录，请联系管理员');
+      throw AppException('账号已被禁止登录，请联系开发者');
     }
   }
 
@@ -50,14 +50,11 @@ class SupabaseAuthDataSource {
     required String idCard,
     required String name,
   }) async {
-    await _adminClient.from('users').upsert(
-      {
-        'id_card': idCard,
-        'name': name,
-        'last_login_at': DateTime.now().toIso8601String(),
-      },
-      onConflict: 'id_card',
-    );
+    await _adminClient.from('users').upsert({
+      'id_card': idCard,
+      'name': name,
+      'last_login_at': DateTime.now().toIso8601String(),
+    }, onConflict: 'id_card');
   }
 }
 
