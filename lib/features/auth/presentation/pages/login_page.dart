@@ -72,19 +72,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    ref.listen(authControllerProvider, (_, next) {
-      final error = next.errorMessage;
-      if (error == null) {
-        return;
-      }
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(SnackBar(content: Text(error)));
-
-      notifier.clearError();
-    });
-
     return Scaffold(
       body: SafeArea(
         child: Column(
