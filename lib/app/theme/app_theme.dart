@@ -3,18 +3,15 @@ import 'package:flutter/material.dart';
 class AppTheme {
   AppTheme._();
 
-  static const _seedColor = Color(0xFF0F5B73);
-  static const _backgroundColor = Color(0xFFF5F7FA);
-  static const _surfaceColor = Colors.white;
+  static const Color _seedColor = Color(0xFF0F5B73);
+  static const Color _backgroundColor = Color(0xFFF5F7FA);
 
   static ThemeData light() {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: _seedColor,
-      brightness: Brightness.light,
     ).copyWith(
       primary: _seedColor,
       secondary: const Color(0xFFE38B29),
-      surface: _surfaceColor,
     );
 
     return ThemeData(

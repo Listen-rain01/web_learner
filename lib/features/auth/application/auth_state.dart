@@ -1,4 +1,4 @@
-import '../domain/entities/auth_session.dart';
+import 'package:web_learner/features/auth/domain/entities/auth_session.dart';
 
 class AuthState {
   const AuthState({

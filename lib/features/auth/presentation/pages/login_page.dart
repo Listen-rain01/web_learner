@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../application/auth_controller.dart';
+import 'package:web_learner/features/auth/application/auth_controller.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -64,7 +65,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Industrial-grade Flutter scaffold for your exam and study integrations.',
+                          'Industrial-grade Flutter scaffold for your exam '
+                          'and study integrations.',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 24),
@@ -118,9 +120,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       return;
     }
 
-    ref.read(authControllerProvider.notifier).signIn(
+      unawaited(ref.read(authControllerProvider.notifier).signIn(
           account: _accountController.text,
           password: _passwordController.text,
-        );
+        ));
   }
 }

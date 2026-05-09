@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../auth/application/auth_controller.dart';
-import '../widgets/home_feature_card.dart';
+import 'package:web_learner/features/auth/application/auth_controller.dart';
+import 'package:web_learner/features/home/presentation/widgets/home_feature_card.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});

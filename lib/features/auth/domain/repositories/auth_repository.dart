@@ -1,4 +1,4 @@
-import '../entities/auth_session.dart';
+import 'package:web_learner/features/auth/domain/entities/auth_session.dart';
 
 abstract class AuthRepository {
   AuthSession? get currentSession;

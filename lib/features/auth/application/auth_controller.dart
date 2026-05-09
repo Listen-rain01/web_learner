@@ -1,8 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../../core/errors/app_exception.dart';
-import '../di/auth_providers.dart';
-import 'auth_state.dart';
+import 'package:web_learner/core/errors/app_exception.dart';
+import 'package:web_learner/features/auth/application/auth_state.dart';
+import 'package:web_learner/features/auth/di/auth_providers.dart';
 
 final authControllerProvider = NotifierProvider<AuthController, AuthState>(
   AuthController.new,
@@ -32,7 +31,7 @@ class AuthController extends Notifier<AuthState> {
         isBusy: false,
         errorMessage: error.message,
       );
-    } catch (_) {
+    } on Exception {
       state = state.copyWith(
         isBusy: false,
         errorMessage: 'Sign-in failed. Review the integration and try again.',

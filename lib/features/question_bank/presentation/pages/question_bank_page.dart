@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../di/question_bank_providers.dart';
-import '../../domain/entities/question_bank_node.dart';
-import '../../domain/entities/question_bank_step.dart';
+import 'package:web_learner/features/question_bank/di/question_bank_providers.dart';
+import 'package:web_learner/features/question_bank/domain/entities/question_bank_node.dart';
+import 'package:web_learner/features/question_bank/domain/entities/question_bank_step.dart';
 
 class QuestionBankPage extends ConsumerWidget {
   const QuestionBankPage({super.key});

@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../features/auth/application/auth_controller.dart';
-import '../../features/auth/presentation/pages/login_page.dart';
-import '../../features/home/presentation/pages/home_page.dart';
-import '../../features/profile/presentation/pages/profile_page.dart';
-import '../../features/question_bank/presentation/pages/question_bank_page.dart';
-import '../../features/shell/presentation/pages/app_shell_page.dart';
+import 'package:web_learner/features/auth/application/auth_controller.dart';
+import 'package:web_learner/features/auth/application/auth_state.dart';
+import 'package:web_learner/features/auth/presentation/pages/login_page.dart';
+import 'package:web_learner/features/home/presentation/pages/home_page.dart';
+import 'package:web_learner/features/profile/presentation/pages/profile_page.dart';
+import 'package:web_learner/features/question_bank/presentation/pages/question_bank_page.dart';
+import 'package:web_learner/features/shell/presentation/pages/app_shell_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final refreshNotifier = RouterRefreshNotifier(ref);
@@ -77,7 +77,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
 class RouterRefreshNotifier extends ChangeNotifier {
   RouterRefreshNotifier(this._ref) {
-    _subscription = _ref.listen(authControllerProvider, (_, next) {
+    _subscription = _ref.listen<AuthState>(authControllerProvider, (_, next) {
       if (_lastAuthenticated != next.isAuthenticated) {
         _lastAuthenticated = next.isAuthenticated;
         notifyListeners();
@@ -86,7 +86,7 @@ class RouterRefreshNotifier extends ChangeNotifier {
   }
 
   final Ref _ref;
-  late final ProviderSubscription _subscription;
+  late final ProviderSubscription<AuthState> _subscription;
   bool _lastAuthenticated = false;
 
   @override

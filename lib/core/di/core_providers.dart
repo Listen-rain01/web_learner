@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../config/app_environment.dart';
-import '../logging/app_logger.dart';
+import 'package:web_learner/core/config/app_environment.dart';
+import 'package:web_learner/core/logging/app_logger.dart';
 
 final appEnvironmentProvider = Provider<AppEnvironment>((ref) {
   return const AppEnvironment(

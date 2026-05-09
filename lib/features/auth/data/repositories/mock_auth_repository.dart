@@ -1,6 +1,6 @@
-import '../../../../core/errors/app_exception.dart';
-import '../../domain/entities/auth_session.dart';
-import '../../domain/repositories/auth_repository.dart';
+import 'package:web_learner/core/errors/app_exception.dart';
+import 'package:web_learner/features/auth/domain/entities/auth_session.dart';
+import 'package:web_learner/features/auth/domain/repositories/auth_repository.dart';
 
 class MockAuthRepository implements AuthRepository {
   AuthSession? _session;

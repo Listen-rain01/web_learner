@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'app.dart';
+import 'package:web_learner/app/app.dart';
 
 void bootstrap() {
   WidgetsFlutterBinding.ensureInitialized();
