@@ -12,4 +12,8 @@ class AppEnvironment {
   final String baseUrl;
 
   bool get isProduction => flavor == AppFlavor.production;
+
+  String get origin => baseUrl;
+
+  String get loginReferer => '$baseUrl/Home/LoginWap2';
 }

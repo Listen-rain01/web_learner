@@ -1,0 +1,46 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+class SecureKvStore {
+  SecureKvStore({FlutterSecureStorage? storage})
+      : _storage = storage ?? const FlutterSecureStorage(),
+        _memory = null;
+
+  SecureKvStore.memory([Map<String, String>? seed])
+      : _memory = seed ?? <String, String>{},
+        _storage = null;
+
+  final FlutterSecureStorage? _storage;
+  final Map<String, String>? _memory;
+
+  Future<void> write({
+    required String key,
+    required String value,
+  }) async {
+    final memory = _memory;
+    if (memory != null) {
+      memory[key] = value;
+      return;
+    }
+
+    await _storage!.write(key: key, value: value);
+  }
+
+  Future<String?> read(String key) async {
+    final memory = _memory;
+    if (memory != null) {
+      return memory[key];
+    }
+
+    return _storage!.read(key: key);
+  }
+
+  Future<void> delete(String key) async {
+    final memory = _memory;
+    if (memory != null) {
+      memory.remove(key);
+      return;
+    }
+
+    await _storage!.delete(key: key);
+  }
+}
