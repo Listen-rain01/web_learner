@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:web_learner/features/auth/application/auth_controller.dart';
 
@@ -18,6 +19,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   static const _appName = 'Web Learner';
   static const _developer = '开发者：山归有时雾';
   static const _copyright = 'Copyright © 2026 Web Learner';
+  static final _idCardPattern = RegExp(r'^\d{15}$|^\d{17}[\dXx]$');
 
   final _formKey = GlobalKey<FormState>();
   final _idCardController = TextEditingController();
@@ -59,10 +61,37 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       return;
     }
 
+    final normalizedAccount = _normalizeIdCard(_idCardController.text);
+    if (_idCardController.text != normalizedAccount) {
+      _idCardController.value = TextEditingValue(
+        text: normalizedAccount,
+        selection: TextSelection.collapsed(offset: normalizedAccount.length),
+      );
+    }
+
     await ref.read(authControllerProvider.notifier).signIn(
-          account: _idCardController.text.trim(),
+          account: normalizedAccount,
           password: _passwordController.text,
         );
+  }
+
+  String _normalizeIdCard(String value) {
+    final trimmed = value.trim();
+    if (trimmed.length == 18) {
+      return '${trimmed.substring(0, 17)}${trimmed.substring(17).toUpperCase()}';
+    }
+    return trimmed;
+  }
+
+  String? _validateIdCard(String? value) {
+    final normalized = _normalizeIdCard(value ?? '');
+    if (normalized.isEmpty) {
+      return '请输入身份证号';
+    }
+    if (!_idCardPattern.hasMatch(normalized)) {
+      return '请输入正确的身份证号格式';
+    }
+    return null;
   }
 
   @override
@@ -123,14 +152,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                           icon: const Icon(Icons.clear),
                                         ),
                                 ),
+                                maxLength: 18,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp('[0-9Xx]'),
+                                  ),
+                                ],
                                 textInputAction: TextInputAction.next,
                                 onChanged: (_) => setState(() {}),
-                                validator: (value) {
-                                  if (value == null || value.trim().isEmpty) {
-                                    return '请输入身份证号';
-                                  }
-                                  return null;
-                                },
+                                validator: _validateIdCard,
                               ),
                               if (authState.showAccountSuggestions &&
                                   authState.savedAccounts.isNotEmpty) ...[
