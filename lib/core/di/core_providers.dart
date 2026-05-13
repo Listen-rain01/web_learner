@@ -12,6 +12,14 @@ final appEnvironmentProvider = Provider<AppEnvironment>((ref) {
     appName: 'Web Learner',
     flavor: AppFlavor.development,
     baseUrl: 'http://61.150.84.25:100',
+    supabaseUrl: String.fromEnvironment(
+      'SUPABASE_URL',
+      defaultValue: 'https://oknsfmaxtvealnmouemj.supabase.co',
+    ),
+    supabasePublishableKey: String.fromEnvironment(
+      'SUPABASE_PUBLISHABLE_KEY',
+      defaultValue: 'sb_publishable_5xz5ri1DAxIivclZwai9AQ_QActvAOH',
+    ),
   );
 });
 

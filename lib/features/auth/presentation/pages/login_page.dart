@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:web_learner/features/announcement/presentation/widgets/login_announcement_card.dart';
 import 'package:web_learner/features/auth/application/auth_controller.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -127,6 +128,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             letterSpacing: 1.2,
                           ),
                         ),
+                        const LoginAnnouncementCard(),
                         const SizedBox(height: 40),
                         Form(
                           key: _formKey,

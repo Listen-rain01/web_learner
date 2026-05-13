@@ -4,6 +4,7 @@ import 'package:web_learner/app/app.dart';
 import 'package:web_learner/core/di/core_providers.dart';
 import 'package:web_learner/core/storage/local_kv_store.dart';
 import 'package:web_learner/core/storage/secure_kv_store.dart';
+import 'package:web_learner/core/supabase/supabase_client_provider.dart';
 
 void main() {
   testWidgets('app boots and shows login screen', (tester) async {
@@ -12,6 +13,7 @@ void main() {
         overrides: [
           localKvStoreProvider.overrideWithValue(LocalKvStore.memory()),
           secureKvStoreProvider.overrideWithValue(SecureKvStore.memory()),
+          supabaseClientProvider.overrideWithValue(null),
         ],
         child: const App(),
       ),
