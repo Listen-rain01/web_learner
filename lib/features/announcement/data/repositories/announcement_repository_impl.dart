@@ -13,6 +13,13 @@ class AnnouncementRepositoryImpl implements AnnouncementRepository {
   @override
   Future<List<Announcement>> fetchLoginAnnouncements() async {
     final records = await _remoteDataSource.fetchAnnouncements();
-    return records.map((record) => record.toEntity()).toList(growable: false);
+    final now = DateTime.now();
+
+    return records
+        .map((record) => record.toEntity())
+        .where((announcement) {
+          return announcement.isVisibleAt(now);
+        })
+        .toList(growable: false);
   }
 }

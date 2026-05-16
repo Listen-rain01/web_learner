@@ -70,7 +70,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       );
     }
 
-    await ref.read(authControllerProvider.notifier).signIn(
+    await ref
+        .read(authControllerProvider.notifier)
+        .signIn(
           account: normalizedAccount,
           password: _passwordController.text,
         );
@@ -106,6 +108,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       body: SafeArea(
         child: Column(
           children: [
+            const LoginAnnouncementCard(),
             Expanded(
               child: Center(
                 child: SingleChildScrollView(
@@ -128,7 +131,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             letterSpacing: 1.2,
                           ),
                         ),
-                        const LoginAnnouncementCard(),
                         const SizedBox(height: 40),
                         Form(
                           key: _formKey,
@@ -170,7 +172,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                 Material(
                                   elevation: 6,
                                   color: Colors.white,
-                                  borderRadius: BorderRadius.circular(14),
+                                  borderRadius: BorderRadius.circular(12),
                                   child: ConstrainedBox(
                                     constraints: const BoxConstraints(
                                       maxHeight: 220,
@@ -206,23 +208,24 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                             ),
                                           ),
                                           onTap: () {
-                                            final credential =
-                                                notifier.selectAccount(
-                                              account.idCard,
-                                            );
+                                            final credential = notifier
+                                                .selectAccount(
+                                                  account.idCard,
+                                                );
                                             _idCardController.text =
                                                 account.idCard;
                                             _idCardController.selection =
                                                 TextSelection.collapsed(
-                                              offset: account.idCard.length,
-                                            );
+                                                  offset: account.idCard.length,
+                                                );
                                             _passwordController.text =
                                                 credential?.password ?? '';
                                             _passwordController.selection =
                                                 TextSelection.collapsed(
-                                              offset:
-                                                  _passwordController.text.length,
-                                            );
+                                                  offset: _passwordController
+                                                      .text
+                                                      .length,
+                                                );
                                             setState(() {});
                                           },
                                         );

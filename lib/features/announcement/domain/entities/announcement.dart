@@ -22,4 +22,18 @@ class Announcement {
 
   /// 返回从完整公告正文中提取出的单行预览文本。
   String get previewText => content.replaceAll(RegExp(r'\s+'), ' ').trim();
+
+  /// 返回公告在指定时间点是否仍可展示。
+  bool isVisibleAt(DateTime time) {
+    if (id.trim().isEmpty || title.trim().isEmpty || content.trim().isEmpty) {
+      return false;
+    }
+    if (startsAt != null && time.isBefore(startsAt!)) {
+      return false;
+    }
+    if (endsAt != null && time.isAfter(endsAt!)) {
+      return false;
+    }
+    return true;
+  }
 }

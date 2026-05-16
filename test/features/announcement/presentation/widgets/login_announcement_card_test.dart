@@ -20,7 +20,7 @@ void main() {
       ProviderScope(
         overrides: [
           loginAnnouncementsProvider.overrideWith(
-            (_) async => [announcement],
+            (_) => [announcement],
           ),
         ],
         child: const MaterialApp(
@@ -31,10 +31,11 @@ void main() {
       ),
     );
 
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.text('系统公告'), findsOneWidget);
-    expect(find.text('登录页公告测试'), findsOneWidget);
-    expect(find.text('查看详情'), findsOneWidget);
+    expect(find.byIcon(Icons.campaign_outlined), findsOneWidget);
+    expect(find.textContaining('登录页公告测试'), findsWidgets);
+    expect(find.text('查看'), findsNothing);
   });
 }
