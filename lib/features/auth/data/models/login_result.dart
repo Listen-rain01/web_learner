@@ -1,3 +1,4 @@
+/// 表示老系统登录接口解析后的结果。
 class LoginResult {
   const LoginResult({
     required this.pid,

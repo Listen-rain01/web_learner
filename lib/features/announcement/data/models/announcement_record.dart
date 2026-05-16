@@ -1,5 +1,6 @@
 import 'package:web_learner/features/announcement/domain/entities/announcement.dart';
 
+/// 表示从 Supabase 读取到的原始公告记录。
 class AnnouncementRecord {
   const AnnouncementRecord({
     required this.id,
@@ -12,6 +13,7 @@ class AnnouncementRecord {
     this.endsAt,
   });
 
+  /// 根据 Supabase 返回行创建记录模型。
   factory AnnouncementRecord.fromMap(Map<String, dynamic> map) {
     return AnnouncementRecord(
       id: map['id'] as String? ?? '',
@@ -34,6 +36,7 @@ class AnnouncementRecord {
   final DateTime? startsAt;
   final DateTime? endsAt;
 
+  /// 转换为领域层使用的公告实体。
   Announcement toEntity() {
     return Announcement(
       id: id,

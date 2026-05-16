@@ -9,6 +9,7 @@ import 'package:web_learner/features/profile/presentation/pages/profile_page.dar
 import 'package:web_learner/features/question_bank/presentation/pages/question_bank_page.dart';
 import 'package:web_learner/features/shell/presentation/pages/app_shell_page.dart';
 
+/// 构建应用路由与登录态重定向规则。
 final appRouterProvider = Provider<GoRouter>((ref) {
   final refreshNotifier = RouterRefreshNotifier(ref);
   ref.onDispose(refreshNotifier.dispose);
@@ -75,6 +76,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   );
 });
 
+/// 仅在登录状态实际变化时刷新 `GoRouter`。
 class RouterRefreshNotifier extends ChangeNotifier {
   RouterRefreshNotifier(this._ref) {
     _subscription = _ref.listen<AuthState>(authControllerProvider, (_, next) {

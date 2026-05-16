@@ -12,6 +12,7 @@ final authControllerProvider = NotifierProvider<AuthController, AuthState>(
   AuthController.new,
 );
 
+/// 管理登录状态、记住账号数据与密码可见性。
 class AuthController extends Notifier<AuthState> {
   static const _savedCredentialsKey = 'auth.saved_credentials';
   static const _rememberAccountKey = 'auth.remember_account';
@@ -23,6 +24,7 @@ class AuthController extends Notifier<AuthState> {
     return AuthState(session: repository.currentSession);
   }
 
+  /// 执行登录，并在启用时更新本地记住账号数据。
   Future<void> signIn({
     required String account,
     required String password,
@@ -34,7 +36,9 @@ class AuthController extends Notifier<AuthState> {
     );
 
     try {
-      final session = await ref.read(authRepositoryProvider).signIn(
+      final session = await ref
+          .read(authRepositoryProvider)
+          .signIn(
             account: account,
             password: password,
           );
@@ -62,11 +66,13 @@ class AuthController extends Notifier<AuthState> {
     }
   }
 
+  /// 清理当前应用会话与基于 Cookie 的后端会话。
   Future<void> signOut() async {
     await ref.read(authRepositoryProvider).signOut();
     state = const AuthState();
   }
 
+  /// 清理当前界面展示的登录错误信息。
   void clearError() {
     if (state.errorMessage == null) {
       return;
@@ -74,16 +80,19 @@ class AuthController extends Notifier<AuthState> {
     state = state.copyWith(errorMessage: null);
   }
 
+  /// 切换是否记住登录成功的账号。
   void toggleRememberAccount() {
     final nextValue = !state.rememberAccount;
     state = state.copyWith(rememberAccount: nextValue);
     unawaited(_saveRememberAccount(nextValue));
   }
 
+  /// 切换登录页密码输入框的可见性。
   void togglePasswordVisibility() {
     state = state.copyWith(showPassword: !state.showPassword);
   }
 
+  /// 在存在数据时展开记住账号建议列表。
   void showAccountSuggestions() {
     if (state.savedAccounts.isEmpty) {
       return;
@@ -91,6 +100,7 @@ class AuthController extends Notifier<AuthState> {
     state = state.copyWith(showAccountSuggestions: true);
   }
 
+  /// 收起记住账号建议列表。
   void hideAccountSuggestions() {
     if (!state.showAccountSuggestions) {
       return;
@@ -98,8 +108,10 @@ class AuthController extends Notifier<AuthState> {
     state = state.copyWith(showAccountSuggestions: false);
   }
 
+  /// 返回选中的记住账号凭据，并关闭建议面板。
   SavedAccountCredential? selectAccount(String idCard) {
-    final credential = state.savedAccounts.cast<SavedAccountCredential?>()
+    final credential = state.savedAccounts
+        .cast<SavedAccountCredential?>()
         .firstWhere(
           (item) => item?.idCard == idCard,
           orElse: () => null,
@@ -109,6 +121,7 @@ class AuthController extends Notifier<AuthState> {
     return credential;
   }
 
+  /// 从本地安全存储中移除一个记住账号。
   Future<void> removeAccount(String idCard) async {
     final updatedAccounts = state.savedAccounts
         .where((account) => account.idCard != idCard)
@@ -123,10 +136,14 @@ class AuthController extends Notifier<AuthState> {
   }
 
   Future<void> _loadPreferences() async {
-    final rememberValue = await ref.read(localKvStoreProvider).read(
+    final rememberValue = await ref
+        .read(localKvStoreProvider)
+        .read(
           _rememberAccountKey,
         );
-    final savedValue = await ref.read(secureKvStoreProvider).read(
+    final savedValue = await ref
+        .read(secureKvStoreProvider)
+        .read(
           _savedCredentialsKey,
         );
 
@@ -140,7 +157,9 @@ class AuthController extends Notifier<AuthState> {
   }
 
   Future<void> _saveRememberAccount(bool value) {
-    return ref.read(localKvStoreProvider).write(
+    return ref
+        .read(localKvStoreProvider)
+        .write(
           key: _rememberAccountKey,
           value: value.toString(),
         );
@@ -152,6 +171,7 @@ class AuthController extends Notifier<AuthState> {
   }) async {
     await _saveRememberAccount(state.rememberAccount);
 
+    // 关闭记住账号后，即使后端会话已经登录成功，也不能再写入本地凭据。
     if (!state.rememberAccount || idCard.isEmpty) {
       return;
     }
@@ -172,7 +192,9 @@ class AuthController extends Notifier<AuthState> {
       accounts.map((account) => account.toMap()).toList(growable: false),
     );
 
-    return ref.read(secureKvStoreProvider).write(
+    return ref
+        .read(secureKvStoreProvider)
+        .write(
           key: _savedCredentialsKey,
           value: encoded,
         );
@@ -186,16 +208,23 @@ class AuthController extends Notifier<AuthState> {
     try {
       final decoded = jsonDecode(rawValue);
       if (decoded is List) {
-        return decoded.whereType<Map<dynamic, dynamic>>().map((item) {
-          return SavedAccountCredential.fromMap(
-            Map<String, dynamic>.from(item),
-          );
-        }).where((item) {
-          return item.idCard.trim().isNotEmpty;
-        }).toList(growable: false);
+        return decoded
+            .whereType<Map<dynamic, dynamic>>()
+            .map((item) {
+              return SavedAccountCredential.fromMap(
+                Map<String, dynamic>.from(item),
+              );
+            })
+            .where((item) {
+              return item.idCard.trim().isNotEmpty;
+            })
+            .toList(growable: false);
       }
     } on FormatException catch (error) {
-      ref.read(appLoggerProvider).warning(
+      // 本地缓存损坏不能阻塞登录页继续加载。
+      ref
+          .read(appLoggerProvider)
+          .warning(
             'saved credentials decode failed: ${error.message}',
           );
     }

@@ -2,6 +2,7 @@ import 'package:web_learner/features/announcement/data/remote/announcement_remot
 import 'package:web_learner/features/announcement/domain/entities/announcement.dart';
 import 'package:web_learner/features/announcement/domain/repositories/announcement_repository.dart';
 
+/// 把 Supabase 公告记录映射为领域实体。
 class AnnouncementRepositoryImpl implements AnnouncementRepository {
   const AnnouncementRepositoryImpl({
     required AnnouncementRemoteDataSource remoteDataSource,

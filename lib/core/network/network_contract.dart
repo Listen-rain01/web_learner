@@ -1,3 +1,4 @@
+/// 描述老系统网络接入的传输约束。
 class NetworkContract {
   const NetworkContract({
     required this.usesCookieSession,
